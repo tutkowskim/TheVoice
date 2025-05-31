@@ -14,13 +14,8 @@ public class PostLeetCodeDailyQuestionTask implements ScheduledTask {
     }
 
     @Override
-    public long getInitialDelaySeconds() {
-        return 0;
-    }
-
-    @Override
-    public long getIntervalSeconds() {
-        return 24 * 60 * 60;
+    public String getCronSchedule() {
+        return "0 21 * * *"; // Everyday at 1pm
     }
 
     @Override
