@@ -14,7 +14,7 @@ application {
 }
 
 dependencies {
-    implementation 'com.google.inject:guice:5.1.0'
+    implementation 'com.google.inject:guice:7.0.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
     implementation 'net.dv8tion:JDA:5.0.0-beta.23'
     implementation 'it.sauronsoftware.cron4j:cron4j:2.2.5'
