@@ -2,6 +2,7 @@ package com.tutkowski.thevoice.bot;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.tutkowski.thevoice.Config;
 import com.tutkowski.thevoice.bot.tasks.ScheduledTask;
 import it.sauronsoftware.cron4j.Scheduler;
 import net.dv8tion.jda.api.JDA;
@@ -15,7 +16,7 @@ public class Bot {
     private final Set<ScheduledTask> tasks;
 
     @Inject
-    public Bot(BotConfig config, Set<ScheduledTask> tasks) {
+    public Bot(Config config, Set<ScheduledTask> tasks) {
         this.jda = JDABuilder.createDefault(config.getToken()).build();
         this.tasks = tasks;
     }
@@ -24,7 +25,7 @@ public class Bot {
         this.jda.awaitReady();
 
         Scheduler scheduler = new Scheduler();
-        for (ScheduledTask task : tasks) {;
+        for (ScheduledTask task : tasks) {
             scheduler.schedule(task.getCronSchedule(), task.getTask(this));
         }
         scheduler.start();

@@ -3,7 +3,7 @@ package com.tutkowski.thevoice;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.tutkowski.thevoice.bot.Bot;
-import com.tutkowski.thevoice.controller.HealthController;
+import com.tutkowski.thevoice.http.Server;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,8 +13,8 @@ public class Main {
             Bot bot = injector.getInstance(Bot.class);
             bot.init();
 
-            HealthController healthController = injector.getInstance(HealthController.class);
-            healthController.init();
+            Server server = injector.getInstance(Server.class);
+            server.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
