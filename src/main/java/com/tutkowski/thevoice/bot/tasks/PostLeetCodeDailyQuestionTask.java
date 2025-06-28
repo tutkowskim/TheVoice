@@ -15,7 +15,7 @@ public class PostLeetCodeDailyQuestionTask implements ScheduledTask {
 
     @Override
     public String getCronSchedule() {
-        return "0 21 * * *"; // Everyday at 1pm
+        return "0 1 * * *";
     }
 
     @Override
