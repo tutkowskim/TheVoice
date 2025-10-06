@@ -7,6 +7,8 @@ import com.tutkowski.thevoice.bot.tasks.ScheduledTask;
 import it.sauronsoftware.cron4j.Scheduler;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.util.Set;
 
@@ -16,9 +18,15 @@ public class Bot {
     private final Set<ScheduledTask> tasks;
 
     @Inject
-    public Bot(Config config, Set<ScheduledTask> tasks) {
-        this.jda = JDABuilder.createDefault(config.getToken()).build();
+    public Bot(Config config, Set<ListenerAdapter> listeners, Set<ScheduledTask> tasks) {
+        this.jda = JDABuilder.createDefault(config.getToken())
+                .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+                .build();
         this.tasks = tasks;
+
+        for (ListenerAdapter lister : listeners) {
+            this.jda.addEventListener(lister);
+        }
     }
 
     public void init() throws InterruptedException {
