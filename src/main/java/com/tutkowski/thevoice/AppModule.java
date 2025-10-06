@@ -3,8 +3,10 @@ package com.tutkowski.thevoice;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
 import com.tutkowski.thevoice.bot.Bot;
+import com.tutkowski.thevoice.bot.tasks.PostFactOfTheDayTask;
 import com.tutkowski.thevoice.bot.tasks.PostLeetCodeDailyQuestionTask;
 import com.tutkowski.thevoice.bot.tasks.ScheduledTask;
+import com.tutkowski.thevoice.clients.gemini.Gemini;
 import com.tutkowski.thevoice.clients.leetcode.LeetCode;
 import com.tutkowski.thevoice.http.HealthController;
 import com.tutkowski.thevoice.http.IController;
@@ -20,6 +22,7 @@ public class AppModule extends AbstractModule {
 
         // Clients
         bind(LeetCode.class);
+        bind(Gemini.class);
 
         // Bot
         bind(Bot.class);
@@ -27,5 +30,6 @@ public class AppModule extends AbstractModule {
 
         Multibinder<ScheduledTask> taskBinder = Multibinder.newSetBinder(binder(), ScheduledTask.class);
         taskBinder.addBinding().to(PostLeetCodeDailyQuestionTask.class);
+        taskBinder.addBinding().to(PostFactOfTheDayTask.class);
     }
 }

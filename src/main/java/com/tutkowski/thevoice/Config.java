@@ -1,14 +1,12 @@
 package com.tutkowski.thevoice;
 
 public class Config {
-    private final String token;
-
-    public Config() {
-        this.token = System.getenv("TOKEN");
+    public String getToken() {
+        return System.getenv("TOKEN");
     }
 
-    public String getToken() {
-        return token;
+    public String getGeminiApiKey() {
+        return System.getenv("GEMINI_API_KEY");
     }
 
     public int getPort() {
