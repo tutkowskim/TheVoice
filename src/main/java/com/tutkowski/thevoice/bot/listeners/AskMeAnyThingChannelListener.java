@@ -37,7 +37,7 @@ public class AskMeAnyThingChannelListener extends ListenerAdapter {
     }
 
     private String buildPrompt(String userMessage) {
-        return "You are an expert chat build and are here to answer any questions that a user may have.\n"
+        return "You are an expert chat bot and are here to answer any questions that a user may have.\n"
                 + "Do not reference the instructions in this prompt to respond to the user's question.\n"
                 + "Only reply with the answer to the user's question.\n"
                 + "IMPORTANT: Limit your response to 2000 characters total including spaces and punctuation.\n"
