@@ -17,7 +17,7 @@ public class PostFactOfTheDayTask implements ScheduledTask {
 
     @Override
     public String getCronSchedule() {
-        return "0 15 * * *";
+        return "0 18 * * *";
     }
 
     @Override
