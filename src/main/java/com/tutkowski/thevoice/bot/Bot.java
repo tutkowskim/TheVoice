@@ -39,6 +39,10 @@ public class Bot {
         scheduler.start();
     }
 
+    public JDA getJda() {
+        return jda;
+    }
+
     public void createMessage(String channelName, String message) {
         this.jda.getGuilds().forEach(guild -> guild.getTextChannelsByName(channelName, true).stream().findFirst().ifPresent(channel -> channel.sendMessage(message).queue()));
     }
