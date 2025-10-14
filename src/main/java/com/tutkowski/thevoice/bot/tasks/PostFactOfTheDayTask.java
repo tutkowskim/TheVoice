@@ -23,16 +23,16 @@ public class PostFactOfTheDayTask implements ScheduledTask {
 
     @Override
     public String getCronSchedule() {
-        return "0 18 * * *";
+        return "0 17 * * *";
     }
 
     @Override
     public Runnable getTask(Bot bot) {
         return () -> {
             try {
+                String selfId = bot.getJda().getSelfUser().getId();
                 TextChannel channel = bot.getJda().getGuilds().getFirst().getTextChannelsByName(this.channelName, true).getFirst();
                 channel.getIterableHistory().takeAsync(700).thenAccept(messages -> {
-                    String selfId = bot.getJda().getSelfUser().getId();
                     List<String> recentFacts = messages.stream()
                             .filter(message -> message.getAuthor().getId().equals(selfId))
                             .map(Message::getContentDisplay)
