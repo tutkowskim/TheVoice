@@ -9,7 +9,7 @@ import com.tutkowski.thevoice.Config;
 
 public class Gemini {
     private static final String baseUrl = "https://generativelanguage.googleapis.com/v1beta/openai";
-    private static final String model = "gemini-2.5-pro";
+    private static final String model = "gemini-2.5-flash";
 
     private final OpenAIClient client;
 
