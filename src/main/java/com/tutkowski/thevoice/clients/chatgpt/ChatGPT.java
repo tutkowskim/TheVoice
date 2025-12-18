@@ -3,8 +3,10 @@ package com.tutkowski.thevoice.clients.chatgpt;
 import com.google.inject.Inject;
 import com.openai.client.OpenAIClient;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
-import com.openai.models.chat.completions.ChatCompletion;
-import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.responses.Response;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseOutputText;
+import com.openai.models.responses.WebSearchPreviewTool;
 import com.tutkowski.thevoice.Config;
 
 public class ChatGPT {
@@ -21,19 +23,19 @@ public class ChatGPT {
     }
 
     public String prompt(String message) {
-        ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
-                .addUserMessage(message)
-                .model(this.model)
-                .build();
+        ResponseCreateParams params =
+                ResponseCreateParams.builder()
+                        .model(this.model)
+                        .input(message)
+                        .addTool(WebSearchPreviewTool.builder().type(WebSearchPreviewTool.Type.WEB_SEARCH_PREVIEW).build())
+                        .build();
 
-        ChatCompletion response = this.client.chat()
-                .completions()
-                .create(params);
-
-        return response.choices()
-                .getFirst()
-                .message()
-                .content()
-                .orElse("(no response)");
+        Response response = client.responses().create(params);
+        return response.output().stream()
+                .flatMap(o -> o.message().stream())
+                .flatMap(m -> m.content().stream())
+                .flatMap(c -> c.outputText().stream())
+                .map(ResponseOutputText::text)
+                .collect(java.util.stream.Collectors.joining());
     }
 }
