@@ -12,10 +12,7 @@ public class PostFactOfTheDayTask implements ScheduledTask {
     private final ChatGPT chatGPT;
 
     private final String channelName = "interesting-fact-of-the-day";
-
-    private final String PROMPT =  "Could you give me an interesting random fact that you haven't recently said?\n"
-            + "Important: Only response with the fact and nothing else.";
-
+    
     @Inject
     public PostFactOfTheDayTask(ChatGPT chatGPT) {
         this.chatGPT = chatGPT;
