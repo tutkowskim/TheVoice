@@ -2,14 +2,14 @@ package com.tutkowski.thevoice.bot.tasks;
 
 import com.google.inject.Inject;
 import com.tutkowski.thevoice.bot.Bot;
-import com.tutkowski.thevoice.clients.gemini.Gemini;
+import com.tutkowski.thevoice.clients.chatgpt.ChatGPT;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.util.List;
 
 public class PostFactOfTheDayTask implements ScheduledTask {
-    private final Gemini gemini;
+    private final ChatGPT chatGPT;
 
     private final String channelName = "interesting-fact-of-the-day";
 
@@ -17,8 +17,8 @@ public class PostFactOfTheDayTask implements ScheduledTask {
             + "Important: Only response with the fact and nothing else.";
 
     @Inject
-    public PostFactOfTheDayTask(Gemini gemini) {
-        this.gemini = gemini;
+    public PostFactOfTheDayTask(ChatGPT chatGPT) {
+        this.chatGPT = chatGPT;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class PostFactOfTheDayTask implements ScheduledTask {
                             .map(Message::getContentDisplay)
                             .toList();
 
-                    String fact = this.gemini.prompt(getPrompt(recentFacts));
+                    String fact = this.chatGPT.prompt(getPrompt(recentFacts));
                     bot.createMessage(this.channelName, fact);
                 });
             } catch (Exception e) {

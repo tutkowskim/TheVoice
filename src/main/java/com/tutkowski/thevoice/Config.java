@@ -5,8 +5,12 @@ public class Config {
         return System.getenv("TOKEN");
     }
 
-    public String getGeminiApiKey() {
-        return System.getenv("GEMINI_API_KEY");
+    public String getOpenAIApiKey() {
+        return System.getenv("OPENAI_API_KEY");
+    }
+
+    public String getOpenAIModel() {
+        return System.getenv().getOrDefault("OPENAI_MODEL", "gpt-5.2");
     }
 
     public int getPort() {

@@ -1,16 +1,16 @@
 package com.tutkowski.thevoice.bot.listeners;
 
 import com.google.inject.Inject;
-import com.tutkowski.thevoice.clients.gemini.Gemini;
+import com.tutkowski.thevoice.clients.chatgpt.ChatGPT;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class AskMeAnyThingChannelListener extends ListenerAdapter {
-    private final Gemini gemini;
+    private final ChatGPT chatGPT;
 
     @Inject
-    public AskMeAnyThingChannelListener(Gemini gemini) {
-        this.gemini = gemini;
+    public AskMeAnyThingChannelListener(ChatGPT chatGPT) {
+        this.chatGPT = chatGPT;
     }
 
     @Override
@@ -28,11 +28,11 @@ public class AskMeAnyThingChannelListener extends ListenerAdapter {
 
         try {
             String prompt = buildPrompt(userMessage);
-            String reply = this.gemini.prompt(prompt);
+            String reply = this.chatGPT.prompt(prompt);
             event.getChannel().sendMessage(reply).queue();
         } catch (Exception e) {
             e.printStackTrace();
-            event.getChannel().sendMessage("⚠️ Error talking to Gemini.").queue();
+            event.getChannel().sendMessage("⚠️ Error talking to ChatGPT.").queue();
         }
     }
 

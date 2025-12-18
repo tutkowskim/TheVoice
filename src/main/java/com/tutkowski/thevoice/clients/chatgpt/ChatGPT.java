@@ -1,4 +1,4 @@
-package com.tutkowski.thevoice.clients.gemini;
+package com.tutkowski.thevoice.clients.chatgpt;
 
 import com.google.inject.Inject;
 import com.openai.client.OpenAIClient;
@@ -7,17 +7,15 @@ import com.openai.models.chat.completions.ChatCompletion;
 import com.openai.models.chat.completions.ChatCompletionCreateParams;
 import com.tutkowski.thevoice.Config;
 
-public class Gemini {
-    private static final String baseUrl = "https://generativelanguage.googleapis.com/v1beta/openai";
-    private static final String model = "gemini-2.5-flash";
-
+public class ChatGPT {
+    private final String model;
     private final OpenAIClient client;
 
     @Inject
-    public Gemini(Config config) {
+    public ChatGPT(Config config) {
+        this.model = config.getOpenAIModel();
         this.client = OpenAIOkHttpClient.builder()
-                .baseUrl(Gemini.baseUrl)
-                .apiKey(config.getGeminiApiKey())
+                .apiKey(config.getOpenAIApiKey())
                 .maxRetries(5)
                 .build();
     }
@@ -25,7 +23,7 @@ public class Gemini {
     public String prompt(String message) {
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
                 .addUserMessage(message)
-                .model(Gemini.model)
+                .model(this.model)
                 .build();
 
         ChatCompletion response = this.client.chat()
