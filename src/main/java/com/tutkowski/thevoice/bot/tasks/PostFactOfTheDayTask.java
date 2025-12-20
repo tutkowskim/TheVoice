@@ -12,7 +12,7 @@ public class PostFactOfTheDayTask implements ScheduledTask {
     private final ChatGPT chatGPT;
 
     private final String channelName = "interesting-fact-of-the-day";
-    
+
     @Inject
     public PostFactOfTheDayTask(ChatGPT chatGPT) {
         this.chatGPT = chatGPT;
@@ -35,8 +35,8 @@ public class PostFactOfTheDayTask implements ScheduledTask {
                             .map(Message::getContentDisplay)
                             .toList();
 
-                    String fact = this.chatGPT.prompt(getPrompt(recentFacts));
-                    bot.createMessage(this.channelName, fact);
+                    var fact = this.chatGPT.prompt(getPrompt(recentFacts));
+                    bot.createMessage(this.channelName, fact.text());
                 });
             } catch (Exception e) {
                 e.printStackTrace();
