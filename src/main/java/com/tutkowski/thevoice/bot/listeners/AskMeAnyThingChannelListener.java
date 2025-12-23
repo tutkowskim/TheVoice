@@ -1,16 +1,22 @@
 package com.tutkowski.thevoice.bot.listeners;
 
 import com.google.inject.Inject;
-import com.tutkowski.thevoice.clients.gemini.Gemini;
+import com.tutkowski.thevoice.clients.chatgpt.ChatGPT;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.FileUpload;
+import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AskMeAnyThingChannelListener extends ListenerAdapter {
-    private final Gemini gemini;
+    private final ChatGPT chatGPT;
 
     @Inject
-    public AskMeAnyThingChannelListener(Gemini gemini) {
-        this.gemini = gemini;
+    public AskMeAnyThingChannelListener(ChatGPT chatGPT) {
+        this.chatGPT = chatGPT;
     }
 
     @Override
@@ -24,24 +30,33 @@ public class AskMeAnyThingChannelListener extends ListenerAdapter {
         }
 
         String userMessage = event.getMessage().getContentDisplay();
+        List<Message.Attachment> attachments = event.getMessage().getAttachments();
+
         event.getChannel().sendTyping().queue(); // show typing indicator
 
         try {
-            String prompt = buildPrompt(userMessage);
-            String reply = this.gemini.prompt(prompt);
-            event.getChannel().sendMessage(reply).queue();
+            var reply = this.chatGPT.prompt(userMessage, attachments);
+
+            String text = reply.text().trim();
+            boolean hasText = !text.isEmpty();
+            if (hasText) {
+                event.getChannel().sendMessage(text).queue();
+            }
+
+            if (!reply.images().isEmpty()) {
+                List<FileUpload> uploads = new ArrayList<>();
+                int idx = 1;
+                for (byte[] img : reply.images()) {
+                    uploads.add(FileUpload.fromData(img, "chatgpt-image-" + idx + ".png"));
+                    idx++;
+                }
+
+                MessageCreateAction action = event.getChannel().sendFiles(uploads);
+                action.queue();
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            event.getChannel().sendMessage("⚠️ Error talking to Gemini.").queue();
+            event.getChannel().sendMessage("⚠️ Error talking to ChatGPT.").queue();
         }
-    }
-
-    private String buildPrompt(String userMessage) {
-        return "You are an expert chat bot and are here to answer any questions that a user may have.\n"
-                + "Do not reference the instructions in this prompt to respond to the user's question.\n"
-                + "Only reply with the answer to the user's question.\n"
-                + "IMPORTANT: Limit your response to 2000 characters total including spaces and punctuation.\n"
-                + "The user would like you to review and respond to the following question or prompt with helpful information.\n"
-                + userMessage;
     }
 }
