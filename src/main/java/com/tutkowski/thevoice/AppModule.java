@@ -7,7 +7,7 @@ import com.tutkowski.thevoice.bot.listeners.AskMeAnyThingChannelListener;
 import com.tutkowski.thevoice.bot.tasks.PostFactOfTheDayTask;
 import com.tutkowski.thevoice.bot.tasks.PostLeetCodeDailyQuestionTask;
 import com.tutkowski.thevoice.bot.tasks.ScheduledTask;
-import com.tutkowski.thevoice.clients.gemini.Gemini;
+import com.tutkowski.thevoice.clients.chatgpt.ChatGPT;
 import com.tutkowski.thevoice.clients.leetcode.LeetCode;
 import com.tutkowski.thevoice.http.HealthController;
 import com.tutkowski.thevoice.http.IController;
@@ -24,7 +24,7 @@ public class AppModule extends AbstractModule {
 
         // Clients
         bind(LeetCode.class);
-        bind(Gemini.class);
+        bind(ChatGPT.class);
 
         // Bot
         bind(Bot.class);
