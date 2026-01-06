@@ -13,6 +13,8 @@ import com.openai.models.responses.ResponseOutputText;
 import com.openai.models.responses.Tool;
 import com.openai.models.responses.WebSearchPreviewTool;
 import com.tutkowski.thevoice.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.entities.Message;
 
@@ -23,6 +25,8 @@ import java.util.List;
 import java.util.concurrent.CompletionException;
 
 public class ChatGPT {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChatGPT.class);
+
     public record ChatResult(String text, List<byte[]> images) {}
 
     private final String model;
@@ -42,6 +46,7 @@ public class ChatGPT {
     }
 
     public ChatResult prompt(String message, List<Message.Attachment> attachments) {
+        LOGGER.info("Sending ChatGPT request with {} attachments", attachments.size());
         Response response = client.responses().create(
                 ResponseCreateParams.builder()
                         .model(this.model)
@@ -65,6 +70,7 @@ public class ChatGPT {
                 .map(Base64.getDecoder()::decode)
                 .toList();
 
+        LOGGER.info("ChatGPT response received: {} chars, {} images", text.length(), images.size());
         return new ChatResult(text, images);
     }
 
@@ -110,6 +116,7 @@ public class ChatGPT {
 
             return java.util.Optional.of(ResponseInputContent.ofInputImage(image));
         } catch (IOException | CompletionException e) {
+            LOGGER.warn("Failed to read attachment {}", attachment.getFileName(), e);
             return java.util.Optional.empty();
         }
     }

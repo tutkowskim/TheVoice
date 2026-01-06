@@ -7,11 +7,15 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.FileUpload;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AskMeAnyThingChannelListener extends ListenerAdapter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AskMeAnyThingChannelListener.class);
+
     private final ChatGPT chatGPT;
 
     @Inject
@@ -32,6 +36,7 @@ public class AskMeAnyThingChannelListener extends ListenerAdapter {
         String userMessage = event.getMessage().getContentDisplay();
         List<Message.Attachment> attachments = event.getMessage().getAttachments();
 
+        LOGGER.info("Ask-me-anything message from {} with {} attachments", event.getAuthor().getName(), attachments.size());
         event.getChannel().sendTyping().queue(); // show typing indicator
 
         try {
@@ -54,8 +59,9 @@ public class AskMeAnyThingChannelListener extends ListenerAdapter {
                 MessageCreateAction action = event.getChannel().sendFiles(uploads);
                 action.queue();
             }
+            LOGGER.info("Ask-me-anything response sent: text={}, images={}", hasText, reply.images().size());
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to respond to ask-me-anything message", e);
             event.getChannel().sendMessage("⚠️ Error talking to ChatGPT.").queue();
         }
     }

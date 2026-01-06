@@ -7,8 +7,11 @@ import java.net.http.HttpResponse;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LeetCode {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LeetCode.class);
     private static final HttpClient client = HttpClient.newHttpClient();
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -25,7 +28,9 @@ public class LeetCode {
                 .POST(HttpRequest.BodyPublishers.ofString(graphqlQuery))
                 .build();
 
+        LOGGER.info("Requesting LeetCode daily question");
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        LOGGER.info("LeetCode response status {}", response.statusCode());
         JsonNode node = mapper.readTree(response.body());
         JsonNode question = node.at("/data/activeDailyCodingChallengeQuestion/question");
 
