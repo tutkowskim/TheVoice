@@ -4,10 +4,12 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %c{1.} - %msg%n"/>
         </Console>
+        <Sentry name="Sentry" dsn="${env:SENTRY_DSN:-}" minimumBreadcrumbLevel="DEBUG" minimumEventLevel="WARN" minimumLevel="DEBUG" />
     </Appenders>
     <Loggers>
         <Root level="info">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="Sentry"/>
         </Root>
     </Loggers>
 </Configuration>

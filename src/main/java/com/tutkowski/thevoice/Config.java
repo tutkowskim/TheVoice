@@ -17,4 +17,8 @@ public class Config {
         String envString = System.getenv().getOrDefault("PORT", "4567");
         return Integer.parseInt(envString);
     }
+
+    public String getSentryDsn() {
+        return System.getenv().get("SENTRY_DSN");
+    }
 }
